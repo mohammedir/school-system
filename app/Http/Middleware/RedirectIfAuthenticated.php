@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use App\Providers\RouteServiceProvider;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+class RedirectIfAuthenticated
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$guards): Response
+    {
+        $guards = empty($guards) ? [null] : $guards;
+        foreach ($guards as $guard) {
+            // التحقق من أن المستخدم مسجل دخول
+            if (Auth::guard($guard)->check()) {
+                if ($guard === 'teachers') {
+                    return redirect()->route('teachers.dashboard');
+                }
+                if ($guard === 'contractors') {
+                    return redirect()->route('contractors.dashboard');
+                }
+                if ($guard === 'engineering') {
+                    return redirect()->route('engineering.dashboard');
+                }
+
+                return redirect(RouteServiceProvider::HOME);
+            }
+        }
+
+        return $next($request);
+    }
+
+}
