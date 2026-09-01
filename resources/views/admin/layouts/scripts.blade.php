@@ -72,44 +72,6 @@
 <audio id="notification-sound" src="{{ asset('assets/sounds/ringtone-you-would-be-glad-to-know.ogg') }}" preload="auto"></audio>
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-
-        // ✅ إعداد Pusher
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('4f720a87f83e58f6d217', {
-            cluster: 'ap2',
-            authEndpoint: '{{ url('/') }}/broadcasting/auth',
-            auth: {
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            }
-        });
-        console.log('Auth endpoint:', '{{ url('/') }}/broadcasting/auth');
-
-        var channel = pusher.subscribe('private-App.Models.User.{{ auth()->id() }}');
-
-        channel.bind('my-event', function (data) {
-            toastr.success(data.message, '🔔 إشعار جديد');
-            const sound = document.getElementById('notification-sound');
-            fetchUnreadNotifications();
-            loadNotifications();
-            if (sound) {
-                try {
-                    sound.pause();
-                    sound.currentTime = 0;
-                    sound.play().then(() => {
-                        console.log('✅ تم تشغيل الصوت بنجاح');
-                    }).catch((err) => {
-                        console.warn('🔇 المتصفح منع تشغيل الصوت:', err);
-                    });
-                } catch (error) {
-                    console.error('❌ خطأ أثناء تشغيل الصوت:', error);
-                }
-            }
-        });
-    });
 </script>
 <script>
 
@@ -125,12 +87,6 @@
                 format: 'yyyy-MM-dd'
             }
         });
-    });
-
-    $(document).on('click', '.view.blade.php-notes', function() {
-        const content = $(this).data('notes');
-        $('#notesModal .modal-body').html(content);
-        $('#notesModal').modal('show');
     });
 </script>
 
