@@ -18,7 +18,7 @@
             var options = {
                 series: [{
                     name: 'الإجمالي',
-                    data: [{{ $engineeringPartner_cnt }}, {{ $student_cnt }}, {{ $contractors_cnt }}],
+                    data: [{{ $student_cnt }}, {{ $contractors_cnt }}],
                     show: false
                 }],
                 chart: {

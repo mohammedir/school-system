@@ -139,6 +139,8 @@ Route::group(
 
             // تحديث حالة الشكوى
             Route::put('admin/sits/complaints/{id}/status', [SitesController::class, 'updateComplaintStatus'])->name('admin.complaints.update-status');
+            Route::get('admin/sits/management/', [SitesController::class, 'sitsManagement'])->name('admin.sits.management');
+            Route::put('admin/sits/managementUpdate/', [SitesController::class, 'sitsManagementUpdate'])->name('admin.site_management.update');
 
             // حذف الشكوى
             Route::delete('admin/sits/complaints/{id}', [SitesController::class, 'deleteComplaint'])->name('admin.complaints.delete');

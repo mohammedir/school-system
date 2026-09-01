@@ -16,10 +16,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $engineeringPartner_cnt = EngineeringPartner::count();
         $student_cnt = Student::count();
         $contractors_cnt = Contractors::count();
 
-        return view('admin.dashboard', compact( 'engineeringPartner_cnt', 'student_cnt', 'contractors_cnt'));
+        return view('admin.dashboard', compact(  'student_cnt', 'contractors_cnt'));
     }
 }

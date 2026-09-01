@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Complaint;
 use App\Models\Lookups;
 use App\Models\RegistrationStudents;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -305,6 +306,133 @@ class SitesController extends Controller
                 'message' => 'حدث خطأ أثناء تحديث الحالة: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function sitsManagement(Request $request)
+    {
+        $data['site_settings'] = SiteSetting::firstOrCreate(['id' => 1]);
+        return view('admin.SitesManagement.site_mangement', $data);
+
+    }
+    public function sitsManagementUpdate(Request $request)
+    {
+        // التحقق من صحة البيانات
+        $request->validate([
+            'site_name'       => 'required|string|max:255',
+            'contact_email'   => 'nullable|email|max:255',
+            'site_logo'       => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'principal_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        // جلب سجل الإعدادات الأساسي
+        $settings = SiteSetting::firstOrCreate(['id' => 1]);
+
+        // أخذ جميع النصوص المدخلة في Form
+        $data = $request->except([
+            '_token',
+            '_method',
+            'site_logo',
+            'principal_image'
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | مجلد الصور
+        |--------------------------------------------------------------------------
+        */
+        $settings->site_name = $request->site_name;
+        $settings->hero_title = $request->hero_title;
+        $settings->hero_subtitle = $request->hero_subtitle;
+        $settings->school_vision = $request->school_vision;
+        $settings->school_mission = $request->school_mission;
+        $settings->principal_name = $request->principal_name;
+        $settings->contact_phone = $request->contact_phone;
+        $settings->contact_address = $request->contact_address;
+        $settings->principal_speech = $request->principal_speech;
+        $settings->social_facebook = $request->social_facebook;
+        $settings->social_instagram = $request->social_instagram;
+
+        $uploadPath = public_path('uploads/site');
+
+        // إنشاء المجلد إذا لم يكن موجوداً
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | رفع شعار الموقع
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('site_logo')) {
+
+            // حذف الصورة القديمة
+            if ($settings->site_logo) {
+
+                $oldLogo = public_path('uploads/site/' . $settings->site_logo);
+
+                if (file_exists($oldLogo)) {
+                    unlink($oldLogo);
+                }
+            }
+
+            // إنشاء اسم جديد للصورة
+            $logoName = time() . '_logo.' .
+                $request->file('site_logo')->getClientOriginalExtension();
+
+            // نقل الصورة إلى public/uploads/site
+            $request->file('site_logo')->move($uploadPath, $logoName);
+
+            // حفظ اسم الصورة فقط في قاعدة البيانات
+            $data['site_logo'] = $logoName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | رفع صورة المديرة
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('principal_image')) {
+
+            // حذف الصورة القديمة
+            if ($settings->principal_image) {
+
+                $oldPrincipal = public_path(
+                    'uploads/site/' . $settings->principal_image
+                );
+
+                if (file_exists($oldPrincipal)) {
+                    unlink($oldPrincipal);
+                }
+            }
+
+            // إنشاء اسم جديد للصورة
+            $principalName = time() . '_principal.' .
+                $request->file('principal_image')->getClientOriginalExtension();
+
+            // نقل الصورة
+            $request->file('principal_image')->move(
+                $uploadPath,
+                $principalName
+            );
+
+            // حفظ اسم الصورة فقط
+            $data['principal_image'] = $principalName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | تحديث قاعدة البيانات
+        |--------------------------------------------------------------------------
+        */
+
+        $settings->update($data);
+
+        return redirect()
+            ->back()
+            ->with('success', 'تم تحديث كافة بيانات الموقع بنجاح');
     }
 
 }

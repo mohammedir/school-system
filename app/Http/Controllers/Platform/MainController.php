@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attachments;
 use App\Models\Complaint;
 use App\Models\Lookups;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request; // ✅ استخدم هذا
 use Illuminate\Support\Facades\Validator;
 
@@ -13,15 +14,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        $data["project_types"] = Lookups::query()->where([
-            "master_key" => "project_type_cd"
-        ])->whereNot("parent_id", 0)->where("status", 1)->get();
-
-        $data["provinces"] = Lookups::query()
-            ->where("master_key", "province")
-            ->whereNot("parent_id", 0)
-            ->where("status", 1)
-            ->get();
+        $data['site_settings'] = SiteSetting::firstOrCreate(['id' => 1]);
 
         return view('site.index', $data);
     }
