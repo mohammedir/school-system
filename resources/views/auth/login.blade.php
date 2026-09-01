@@ -61,8 +61,14 @@
                     <!--begin::Wrapper-->
                     <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
                         <!--begin::Form-->
-                        <form class="form w-100" method="POST" action="{{ route('login') }}" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{ route('dashboardController') }}" >
-                            <!--begin::Heading-->
+                        <form class="form w-100"
+                              method="POST"
+                              action="{{ route('login') }}"
+                              novalidate="novalidate"
+                              id="kt_sign_in_form"
+                              data-kt-redirect-url="{{ route('dashboardController') }}">
+
+                            @csrf                            <!--begin::Heading-->
                             <img class="mb-10 text-center mx-auto d-block" src="{{asset('uploads/logo/logo_dashbord.jpg')}}" height="150px"/>
                             <div class="text-center mb-11">
                                 <!--begin::Title-->
