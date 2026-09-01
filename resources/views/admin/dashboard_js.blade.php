@@ -1,24 +1,6 @@
 <script>
     $(document).ready(function () {
 
-        // Webpack support
-        if (typeof module !== 'undefined') {
-            module.exports = general_stats;
-        }
-
-        // On document ready
-        KTUtil.onDOMContentLoaded(function() {
-            general_stats.init();
-        });
-
-
-
-        var shares_buying_stats = function () {
-        var chart = {
-            self: null,
-            rendered: false
-        };
-
         // Private methods
         var initChart = function(chart) {
             var element = document.getElementById("shares_buying_stats");
