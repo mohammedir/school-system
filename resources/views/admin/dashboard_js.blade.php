@@ -168,17 +168,7 @@
                 });
             }
         }
-    }();
-
-    // Webpack support
-    if (typeof module !== 'undefined') {
-        module.exports = shares_buying_stats;
-    }
-
-    // On document ready
-    KTUtil.onDOMContentLoaded(function() {
-        shares_buying_stats.init();
-    });
+    ();
 
     });
 </script>
