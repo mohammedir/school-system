@@ -58,7 +58,6 @@
                 applyNumberFormatting();
             });
         });
-
     });
 </script>
 
@@ -109,135 +108,10 @@
                     console.error('❌ خطأ أثناء تشغيل الصوت:', error);
                 }
             }
-
         });
-
     });
 </script>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        loadNotifications();
-
-        // عند فتح القائمة - تحميل الإشعارات داخل القائمة
-        document.querySelector('[data-kt-menu-trigger]').addEventListener('click', function () {
-            loadNotifications();
-        });
-        // Mark all as read
-        $(document).on('click', '#mark-all-read', function () {
-            fetch("{{ route('notifications.markAsRead') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => {
-                loadNotifications();
-                fetchUnreadNotifications(); // إخفاء العدد
-            });
-        });
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('mark-as-read')) {
-                const notificationId = e.target.dataset.id;
-
-                fetch(`{{ url('/') }}/notifications/mark-as-read/${notificationId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            // Optional: remove the dot
-                            e.target.remove();
-                            loadNotifications();
-                            fetchUnreadNotifications();
-                        } else {
-                            console.warn('❌ Failed to mark notification as read');
-                        }
-                    });
-            }
-        });
-
-    });
-
-    function fetchUnreadNotifications() {
-        fetch("{{ route('notifications.unread') }}")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("unread-count").textContent = data.count;
-            });
-    }
-
-    function loadNotifications() {
-        fetch("{{ route('notifications.list') }}")
-            .then(response => response.json())
-            .then(data => {
-                const list = document.getElementById("notification-list");
-                list.innerHTML = ''; // تفريغ القائمة
-
-                if (data.notifications.length === 0) {
-                    list.innerHTML = '<li class="text-center text-muted">لا توجد إشعارات جديدة</li>';
-                }
-
-                data.notifications.forEach(notification => {
-                    const li = document.createElement("li");
-                    li.className = "d-flex flex-stack py-4 border-bottom";
-                    li.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <div class="symbol symbol-35px me-4">
-                            <span class="symbol-label bg-light-info">
-                                <i class="ki-outline ki-message-text fs-2 text-info"></i>
-                            </span>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <a href="${notification.data.url}"><span class="fw-semibold ${notification.read_at != null
-                                                ?`text-gray-600` : ''}">${notification.data.message}</span></a>
-                            <span class="text-muted fs-8">${notification.created_at_human}</span>
-                        </div>
-                    </div>
-                    ${
-                        notification.read_at === null
-                            ? `<span class="badge bg-info rounded-circle ms-3 mark-as-read" data-id="${notification.id}"
-                                style="width: 10px; height: 10px; cursor: pointer;"> </span>`
-                            : ''
-                    }
-
-                `;
-                    list.appendChild(li);
-                });
-
-                // بعد العرض، نحدث العداد
-                fetchUnreadNotifications();
-            });
-    }
-    function fetchUnreadNotifications() {
-        fetch("{{ route('notifications.unread') }}")
-            .then(response => response.json())
-            .then(data => {
-                const badge = document.getElementById("unread-count");
-                if (data.count > 0) {
-                    badge.textContent = data.count;
-                    badge.style.display = 'inline-flex';
-                } else {
-                    badge.style.display = 'none';
-                }
-            });
-    }
-
-   /* document.querySelector('[data-kt-menu-trigger]').addEventListener('click', function () {
-        // إرسال طلب لتحديث كل الإشعارات كمقروء
-        fetch("{{ route('notifications.markAsRead') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
-            fetchUnreadNotifications(); // إخفاء العدد
-        });
-    });*/
 
     document.querySelectorAll('.my-datepicker').forEach(function(element) {
         new tempusDominus.TempusDominus(element, {
