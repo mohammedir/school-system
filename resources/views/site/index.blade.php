@@ -449,11 +449,11 @@
                 <li class="nav-item"><a class="nav-link" href="#teachers">المعلمون</a></li>
                 <li class="nav-item"><a class="nav-link" href="#activities">الأخبار والأنشطة</a></li>
             </ul>
-            <div class="d-flex align-items-center gap-2">
+            {{--<div class="d-flex align-items-center gap-2">
                 <a href="#register" class="btn btn-brand">
                     <i class="fas fa-user-plus me-2"></i> طلب تسجيل طالب
                 </a>
-            </div>
+            </div>--}}
         </div>
     </div>
 </nav>
@@ -474,8 +474,8 @@
                     تسعى مدرسة <strong>Learn To Be</strong> لتقديم تعليم حديث يجمع بين الرقمنة والابتكار وغرس القيم الأخلاقية الأصيلة، لنضمن لبناء أطفالكم المستقبل الأفضل.
                 </p>
                 <div class="d-flex flex-wrap gap-3 mb-5 animate__animated animate__fadeInUp animate__delay-1s">
-                    <a href="#register" class="btn btn-brand btn-lg">
-                        <i class="fas fa-paper-plane me-2"></i> قدم طلب التحاق الآن
+                    <a href="#activities" class="btn btn-brand btn-lg">
+                        <i class="fas fa-paper-plane me-2"></i> احدث الاخبار والانشطة
                     </a>
                     <a href="#facilities" class="btn btn-outline-brand btn-lg">
                         <i class="fas fa-compass me-2"></i> استكشف مرافق المدرسة
@@ -611,7 +611,7 @@
                         <i class="fas fa-child fa-2x text-primary"></i>
                     </div>
                     <h4 class="fw-bold mb-3">مرحلة الطفولة المبكرة</h4>
-                    <p class="text-muted small mb-4">التعلم باللعب والأنشطة التفاعلية لتنمية المهارات الإدراكية والحركية واللغوية لدى الطفل.</p>
+                    <p class="text-muted small mb-4">{{$site_settings->section_kindergarten}}</p>
                     <ul class="list-unstyled small text-muted mb-4 lh-lg">
                         <li><i class="fas fa-check text-success me-2"></i> قاعات منتسوري مجهزة</li>
                         <li><i class="fas fa-check text-success me-2"></i> تعليم اللغات المبكر</li>
@@ -716,59 +716,374 @@
 
 <!-- Teachers Section -->
 <section id="teachers" class="py-5 bg-white">
+
     <div class="container py-4">
+
+        {{-- عنوان القسم --}}
         <div class="text-center mb-5">
-            <span class="section-tag">نخبة التعليم</span>
-            <h2 class="section-title">كادرنا التعليمي المتميز</h2>
+
+            <span class="section-tag">
+                نخبة التعليم
+            </span>
+
+            <h2 class="section-title">
+                كادرنا التعليمي المتميز
+            </h2>
+
         </div>
 
+
+        {{-- المدرسين --}}
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="د. أحمد الفارس">
-                    <div class="teacher-info">
-                        <h5 class="fw-bold mb-1">د. أحمد الفارس</h5>
-                        <p class="text-primary small fw-bold mb-2">مشرف قسم العلوم والفيزياء</p>
-                        <p class="text-muted small">دكتوراه في المناهج، خبرة 12 عاماً في التعليم التفاعلي.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-6 col-lg-3">
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="أ. سارة المنصور">
-                    <div class="teacher-info">
-                        <h5 class="fw-bold mb-1">أ. سارة المنصور</h5>
-                        <p class="text-primary small fw-bold mb-2">معلمة اللغة الإنجليزية</p>
-                        <p class="text-muted small">ماجستير لغويات تطبيقية، حاصلة على اعتماد TESOL الدولية.</p>
-                    </div>
-                </div>
-            </div>
+            @foreach($teachers as $teacher)
 
-            <div class="col-md-6 col-lg-3">
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="أ. مريم الخالد">
-                    <div class="teacher-info">
-                        <h5 class="fw-bold mb-1">أ. مريم الخالد</h5>
-                        <p class="text-primary small fw-bold mb-2">مشرفة قسم الرياضيات</p>
-                        <p class="text-muted small">خبيرة المناهج الدولية وتدريب القدرات والتميّز.</p>
-                    </div>
-                </div>
-            </div>
+                <div class="col-md-6 col-lg-3">
 
-            <div class="col-md-6 col-lg-3">
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" class="teacher-img" alt="أ. خالد الشهري">
-                    <div class="teacher-info">
-                        <h5 class="fw-bold mb-1">أ. خالد الشهري</h5>
-                        <p class="text-primary small fw-bold mb-2">مدرب الحاسب والذكاء الاصطناعي</p>
-                        <p class="text-muted small">مهندس حاسبات ومشرِف على فريق البرمجة الفائز بالميداليات.</p>
+                    {{-- Teacher Card --}}
+                    <div class="teacher-card h-100"
+                         data-bs-toggle="modal"
+                         data-bs-target="#teacherModal{{ $teacher->id }}"
+                         style="cursor:pointer;">
+
+                        {{-- صورة المدرس --}}
+                        <img
+                            src="{{ asset('/' . $teacher->profile_image) }}"
+                            class="teacher-img"
+                            alt="{{ $teacher->teacher_name }}"
+                        >
+
+                        <div class="teacher-info">
+
+                            <h5 class="fw-bold mb-1">
+                                {{ $teacher->teacher_name }}
+                            </h5>
+
+                            @if($teacher->specializations)
+                                <p class="text-primary small fw-bold mb-2">
+                                    {{ $teacher->specializations }}
+                                </p>
+                            @endif
+
+                            @if($teacher->previous_experience)
+
+                                <p class="text-muted small mb-0">
+
+                                    {{ Str::limit($teacher->previous_experience, 30, '...') }}
+
+                                </p>
+
+                            @endif
+
+                        </div>
+
                     </div>
+
                 </div>
-            </div>
+
+
+                {{-- ================================================= --}}
+                {{-- Teacher Modal --}}
+                {{-- ================================================= --}}
+
+                <div class="modal fade"
+                     id="teacherModal{{ $teacher->id }}"
+                     tabindex="-1"
+                     aria-labelledby="teacherModalLabel{{ $teacher->id }}"
+                     aria-hidden="true">
+
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+                        <div class="modal-content border-0 shadow-lg rounded-4">
+
+
+                            {{-- Modal Header --}}
+                            <div class="modal-header border-0 px-4 pt-4">
+
+                                <button type="button"
+                                        class="btn-close ms-auto"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                </button>
+
+                            </div>
+
+
+                            {{-- Modal Body --}}
+                            <div class="modal-body px-4 px-md-5 pb-5">
+
+                                {{-- صورة واسم المدرس --}}
+                                <div class="text-center mb-4">
+
+                                    @if($teacher->profile_image)
+
+                                        <img
+                                            src="{{ asset('/' . $teacher->profile_image) }}"
+                                            alt="{{ $teacher->teacher_name }}"
+                                            class="rounded-circle shadow mb-3"
+                                            style="
+                                                width:150px;
+                                                height:150px;
+                                                object-fit:cover;
+                                                border:5px solid #fff;
+                                            "
+                                        >
+
+                                    @else
+
+                                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3"
+                                             style="width:150px;height:150px;">
+
+                                            <i class="fas fa-user text-muted fs-1"></i>
+
+                                        </div>
+
+                                    @endif
+                                    <h3 class="fw-bold mb-1">
+                                        {{ $teacher->teacher_name }}
+                                    </h3>
+                                    @if($teacher->specializations)
+
+                                        <p class="text-primary fw-bold mb-0">
+                                            {{ $teacher->specializations }}
+                                        </p>
+
+                                    @endif
+
+                                </div>
+
+
+                                {{-- البيانات --}}
+                                <div class="row g-3">
+
+
+                                    {{-- سنوات الخبرة --}}
+                                    @if($teacher->experience_years !== null)
+
+                                        <div class="col-md-6">
+
+                                            <div class="p-3 bg-light rounded-3 h-100">
+
+                                                <div class="d-flex align-items-center">
+
+                                                    <div class="symbol symbol-40px me-3">
+
+                                                        <div class="symbol-label bg-primary">
+
+                                                            <i class="fas fa-briefcase text-white"></i>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div>
+
+                                                        <div class="text-muted small">
+                                                            سنوات الخبرة
+                                                        </div>
+
+                                                        <div class="fw-bold">
+                                                            {{ $teacher->experience_years }} سنة
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+
+
+                                    {{-- المؤهلات --}}
+                                    @if($teacher->qualifications)
+
+                                        <div class="col-md-6">
+
+                                            <div class="p-3 bg-light rounded-3 h-100">
+
+                                                <div class="d-flex align-items-center">
+
+                                                    <div class="symbol symbol-40px me-3">
+
+                                                        <div class="symbol-label bg-success">
+
+                                                            <i class="fas fa-graduation-cap text-white"></i>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div>
+
+                                                        <div class="text-muted small">
+                                                            المؤهلات العلمية
+                                                        </div>
+
+                                                        <div class="fw-bold">
+                                                            {{ $teacher->qualifications }}
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+
+
+                                    {{-- التخصصات --}}
+                                    @if($teacher->specializations)
+
+                                        <div class="col-md-12">
+
+                                            <div class="p-3 bg-light rounded-3">
+
+                                                <div class="d-flex align-items-center mb-2">
+
+                                                    <i class="fas fa-book text-primary fs-4 me-2"></i>
+
+                                                    <span class="fw-bold">
+                                                        التخصصات
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="text-muted">
+                                                    {{ $teacher->specializations }}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+
+
+                                    {{-- الشهادات --}}
+                                    @if($teacher->certificates)
+
+                                        <div class="col-md-12">
+
+                                            <div class="p-3 bg-light rounded-3">
+
+                                                <div class="d-flex align-items-center mb-2">
+
+                                                    <i class="fas fa-certificate text-warning fs-4 me-2"></i>
+
+                                                    <span class="fw-bold">
+                                                        الشهادات والدورات
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="text-muted">
+                                                    {{ $teacher->certificates }}
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+
+
+                                    {{-- الخبرات السابقة --}}
+                                    @if($teacher->previous_experience)
+
+                                        <div class="col-md-12">
+
+                                            <div class="p-3 bg-light rounded-3">
+
+                                                <div class="d-flex align-items-center mb-2">
+
+                                                    <i class="fas fa-history text-info fs-4 me-2"></i>
+
+                                                    <span class="fw-bold">
+                                                        عن الاستاذ : {{$teacher->teacher_name}}
+                                                    </span>
+
+                                                </div>
+
+                                                <div class="text-muted"
+                                                     style="line-height:1.9;">
+
+                                                    {{ $teacher->previous_experience }}
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+
+
+                                    {{-- التفرغ --}}
+                                    @if($teacher->availability)
+
+                                        <div class="col-md-6">
+
+                                            <div class="p-3 bg-light rounded-3">
+
+                                                <div class="d-flex align-items-center">
+
+                                                    <i class="fas fa-clock text-danger fs-4 me-3"></i>
+
+                                                    <div>
+
+                                                        <div class="text-muted small">
+                                                            نوع التفرغ
+                                                        </div>
+
+                                                        <div class="fw-bold">
+
+                                                            @if($teacher->availability == 'full_time')
+                                                                دوام كامل
+
+                                                            @elseif($teacher->availability == 'part_time')
+                                                                دوام جزئي
+
+                                                            @elseif($teacher->availability == 'freelance')
+                                                                عمل حر
+
+                                                            @endif
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @endforeach
+
         </div>
+
     </div>
+
 </section>
+
+
 
 <!-- News & Activities Section -->
 <section id="activities" class="py-5" style="background-color: #f8fafc;">
@@ -831,7 +1146,7 @@
 </section>
 
 <!-- Registration & Contact Section -->
-<section id="register" class="py-5 bg-white">
+{{--<section id="register" class="py-5 bg-white">
     <div class="container py-4">
         <div class="row align-items-center gy-5">
             <div class="col-lg-6">
@@ -903,28 +1218,310 @@
             </div>
         </div>
     </div>
-</section>
+</section>--}}
+<!-- Complaints & Suggestions Section -->
+<section id="complaints" class="py-5 bg-white">
+    <div class="container py-4">
 
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <span class="section-tag">صوتكم يهمنا</span>
+
+            <h2 class="section-title">
+                الشكاوى والمقترحات والاستفسارات
+            </h2>
+
+            <p class="text-muted mx-auto" style="max-width: 750px;">
+                نحرص في مدرسة ليرن تو بي على الاستماع إلى أولياء الأمور
+                والطلاب والمجتمع المدرسي، ونسعى دائماً إلى تطوير خدماتنا
+                وتحسين البيئة التعليمية.
+            </p>
+        </div>
+
+        <div class="row align-items-center gy-5">
+
+            <!-- Information -->
+            <div class="col-lg-5">
+
+                <div class="pe-lg-4">
+
+                    <div class="mb-4">
+
+                        <div class="d-flex align-items-center gap-3 mb-3">
+
+                            <div class="rounded-circle bg-light p-3 text-primary">
+                                <i class="fas fa-comments fa-lg"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    نحن نستمع إليكم
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    ملاحظاتكم تساعدنا على التطوير المستمر.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <div class="d-flex align-items-center gap-3 mb-3">
+
+                            <div class="rounded-circle bg-light p-3 text-primary">
+                                <i class="fas fa-shield-alt fa-lg"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    سرية المعلومات
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    يتم التعامل مع جميع الشكاوى والملاحظات بسرية واهتمام.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <div class="d-flex align-items-center gap-3 mb-3">
+
+                            <div class="rounded-circle bg-light p-3 text-primary">
+                                <i class="fas fa-headset fa-lg"></i>
+                            </div>
+
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    متابعة الإدارة
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    تقوم إدارة المدرسة بمراجعة الطلبات ومتابعتها.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Contact Information -->
+
+                    <div class="p-4 rounded-4"
+                         style="background: var(--brand-light);">
+
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-phone-alt me-2"></i>
+                            للتواصل المباشر
+                        </h6>
+
+                        <p class="mb-2 text-muted">
+                            <i class="fas fa-phone me-2 text-primary"></i>
+                            {{$site_settings->contact_phone}}
+                        </p>
+
+                        <p class="mb-0 text-muted">
+                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                            {{$site_settings->contact_address}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Complaint Form -->
+            <div class="col-lg-7">
+
+                <div class="reg-form-card">
+
+                    <div class="text-center mb-4">
+
+                        <div class="vm-icon mx-auto mb-3"
+                             style="width:60px;height:60px;font-size:1.5rem;">
+
+                            <i class="fas fa-paper-plane"></i>
+
+                        </div>
+
+                        <h4 class="fw-bold text-primary mb-2">
+                            إرسال رسالة إلى إدارة المدرسة
+                        </h4>
+
+                        <p class="text-muted small mb-0">
+                            يمكنك إرسال شكوى أو مقترح أو استفسار وسيتم التعامل معه من قبل الإدارة.
+                        </p>
+
+                    </div>
+
+
+                    <form  method="post" enctype="multipart/form-data" action="{{route('complaints.store')}}" id="complaintForm">
+
+                        @csrf
+
+                        <div class="row g-3">
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold small">
+                                    الاسم الكامل
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="complainant_name"
+                                    class="form-control"
+                                    placeholder="أدخل اسمك الكامل"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-bold small">
+                                    رقم التواصل
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    name="phone_number"
+                                    class="form-control"
+                                    placeholder="05xxxxxxxx"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Type -->
+                            <div class="col-12">
+
+                                <label class="form-label fw-bold small">
+                                    نوع الرسالة
+                                </label>
+
+                                <select
+                                    name="type"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="" selected disabled>
+                                        اختر نوع الرسالة
+                                    </option>
+
+                                    <option value="complaint">
+                                        شكوى
+                                    </option>
+
+                                    <option value="suggestion">
+                                        مقترح
+                                    </option>
+
+                                    <option value="inquiry">
+                                        استفسار
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Details -->
+                            <div class="col-12">
+
+                                <label class="form-label fw-bold small">
+                                    التفاصيل
+                                </label>
+
+                                <textarea
+                                    name="details"
+                                    class="form-control"
+                                    rows="6"
+                                    maxlength="1000"
+                                    minlength="10"
+                                    placeholder="اكتب تفاصيل الشكوى أو المقترح أو الاستفسار..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                            <!-- Submit -->
+                            <div class="col-12">
+
+                                <button
+                                    type="submit"
+                                    id="complaintSubmitBtn"
+                                    class="btn btn-brand w-100 py-3 mt-2"
+                                >
+
+                                    <i class="fas fa-paper-plane me-2"></i>
+
+                                    إرسال الرسالة
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+
+                    <div id="complaintSuccess"
+                         class="alert alert-success mt-4 d-none"
+                         role="alert">
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="إغلاق">
+                        </button>
+                    </div>
+
+                    <div id="complaintError"
+                         class="alert alert-danger mt-4 d-none"
+                         role="alert">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
 <!-- Footer -->
 <footer>
     <div class="container">
         <div class="row g-4 mb-5">
             <div class="col-lg-4">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M50 10 L90 30 L50 50 L10 30 Z" fill="#ffffff"/>
-                        <path d="M50 35 C30 35 15 50 15 70 C15 85 30 90 50 90 C70 90 85 85 85 70 C85 50 70 35 50 35 Z" stroke="#ffffff" stroke-width="8" fill="none"/>
-                    </svg>
-                    <span class="fs-4 fw-bold text-white">LearnToBe</span>
+                    <img src="{{asset('uploads/site/'.$site_settings->site_logo)}}" width="30" height="30" alt="Logo">
+                    <span class="fs-4 fw-bold text-white">{{$site_settings->site_name}}</span>
                 </div>
                 <p class="text-white-50 small leading-relaxed mb-4">
                     مدرسة ليرن تو بي الخاصة صرح تعليمي متميز يهدف إلى بناء جيل مبدع، متسلح بالمعرفة والمهارات التكنولوجية والأخلاق الحميدة.
                 </p>
                 <div class="d-flex">
-                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="{{$site_settings->social_facebook}}" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{$site_settings->social_instagram}}" class="social-icon"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
@@ -1042,6 +1639,203 @@
     window.onload = function() {
         animateCounters();
     };
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const form = document.getElementById('complaintForm');
+        const submitBtn = document.getElementById('complaintSubmitBtn');
+        const successBox = document.getElementById('complaintSuccess');
+        const errorBox = document.getElementById('complaintError');
+
+        if (!form) {
+            console.error('complaintForm not found');
+            return;
+        }
+
+        form.addEventListener('submit', async function (e) {
+
+            e.preventDefault();
+
+            // إخفاء الرسائل السابقة
+            successBox.classList.add('d-none');
+            errorBox.classList.add('d-none');
+
+            // إزالة أخطاء التحقق السابقة
+            form.querySelectorAll('.is-invalid').forEach(function (input) {
+                input.classList.remove('is-invalid');
+            });
+
+            form.querySelectorAll('.invalid-feedback').forEach(function (error) {
+                error.textContent = '';
+            });
+
+            // حفظ النص الأصلي للزر
+            const originalButtonText = `
+            <i class="fas fa-paper-plane me-2"></i>
+            إرسال الرسالة
+        `;
+
+            // تعطيل الزر
+            submitBtn.disabled = true;
+
+            submitBtn.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            جاري الحفظ...
+        `;
+
+            try {
+
+                const formData = new FormData(form);
+
+                const response = await fetch(form.action, {
+
+                    method: 'POST',
+
+                    headers: {
+                        'X-CSRF-TOKEN': form.querySelector(
+                            'input[name="_token"]'
+                        ).value,
+
+                        'Accept': 'application/json'
+                    },
+
+                    body: formData
+
+                });
+
+
+                // محاولة قراءة JSON
+                const data = await response.json();
+
+                console.log('Response:', data);
+                console.log('Status:', response.status);
+
+
+                // ==========================================
+                // Validation Error
+                // ==========================================
+
+                if (response.status === 422) {
+
+                    if (data.errors) {
+
+                        Object.keys(data.errors).forEach(function (field) {
+
+                            const input = form.querySelector(
+                                `[name="${field}"]`
+                            );
+
+                            if (!input) {
+                                return;
+                            }
+
+                            input.classList.add('is-invalid');
+
+                            const feedback =
+                                input.closest('.col-12, .col-md-6')
+                                    ?.querySelector('.invalid-feedback');
+
+                            if (feedback) {
+
+                                feedback.textContent =
+                                    data.errors[field][0];
+
+                            }
+
+                        });
+
+                    }
+
+                    errorBox.classList.remove('d-none');
+
+                    errorBox.innerHTML = `
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    يرجى التأكد من البيانات المدخلة.
+                `;
+
+                    return;
+                }
+
+
+                // ==========================================
+                // Success
+                // ==========================================
+
+                if (response.ok && data.success === true) {
+
+                    // تفريغ جميع الحقول
+                    form.reset();
+
+                    // إزالة أي أخطاء
+                    form.querySelectorAll('.is-invalid').forEach(function (input) {
+                        input.classList.remove('is-invalid');
+                    });
+
+
+                    // عرض رسالة النجاح
+                    successBox.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    ${data.message || 'تم إرسال الشكوى بنجاح.'}
+                `;
+
+                    successBox.classList.remove('d-none');
+
+
+                    // التوجه إلى رسالة النجاح
+                    successBox.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+
+
+                    // إيقاف التنفيذ هنا
+                    return;
+                }
+
+
+                // ==========================================
+                // أي استجابة غير متوقعة
+                // ==========================================
+
+                throw new Error(
+                    data.message ||
+                    'حدث خطأ أثناء حفظ البيانات.'
+                );
+
+
+            } catch (error) {
+
+                console.error('Error:', error);
+
+
+                // رسالة الفشل
+                errorBox.innerHTML = `
+                <i class="fas fa-exclamation-circle me-2"></i>
+                ${error.message || 'فشل إرسال الشكوى، يرجى المحاولة مرة أخرى.'}
+            `;
+
+                errorBox.classList.remove('d-none');
+
+
+                errorBox.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+            } finally {
+
+                // إعادة الزر لوضعه الطبيعي
+                submitBtn.disabled = false;
+
+                submitBtn.innerHTML = originalButtonText;
+
+            }
+
+        });
+
+    });
 </script>
 </body>
 </html>

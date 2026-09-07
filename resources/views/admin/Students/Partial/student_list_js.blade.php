@@ -49,34 +49,43 @@
         // 2. تعريف DataTable للطلاب مع الفلاتر
         // =============================================
         var table = $("#kt_table_student").DataTable({
+
             processing: true,
             serverSide: true,
+
             ajax: {
                 url: "{{ route('students.getStudents') }}",
                 type: "GET",
+
                 data: function (d) {
+
                     // الفلاتر الأساسية
                     d.student_id = $('#filter_student_id').val();
                     d.first_name = $('#filter_first_name').val();
                     d.last_name = $('#filter_last_name').val();
                     d.mobile = $('#filter_mobile').val();
+
+                    // تاريخ الميلاد
                     d.birth_date_from = $('#filter_birth_date_from').val();
                     d.birth_date_to = $('#filter_birth_date_to').val();
 
-                    // ✅ الفلاتر الجديدة من نموذج البحث
+                    // الفلاتر الجديدة
                     d.gender = $('#gender').val();
                     d.age_group = $('#age_group').val();
                     d.class_id = $('#class').val();
                     d.accreditation_status = $('#accreditation_status').val();
 
-                    // فلاتر إضافية إذا وجدت
+                    // فلاتر إضافية
                     d.province_cd = $('#province_cd').val();
                     d.location_cities = $('#location_cities').val();
                     d.location_areas = $('#location_areas').val();
                 },
+
                 error: function (xhr, error, thrown) {
-                    console.log("Error in DataTable AJAX:", error);
+
+                    console.log("DataTable Error:", error);
                     console.log("Response:", xhr.responseText);
+
                     Swal.fire({
                         text: 'حدث خطأ في تحميل البيانات',
                         icon: 'error',
@@ -84,27 +93,33 @@
                     });
                 }
             },
+
             columns: [
+
                 {
                     data: 'student_id',
                     name: 'student_id',
                     className: 'text-center'
                 },
+
                 {
                     data: 'full_name',
                     name: 'full_name',
                     className: 'text-center'
                 },
+
                 {
                     data: 'birth_date',
                     name: 'birth_date',
                     className: 'text-center'
                 },
+
                 {
                     data: 'mobile',
                     name: 'mobile',
                     className: 'text-center'
                 },
+
                 {
                     data: 'actions',
                     name: 'actions',
@@ -113,33 +128,64 @@
                     className: 'text-end'
                 }
             ],
+
             order: [[0, 'desc']],
+
             pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "الكل"]],
+
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "الكل"]
+            ],
+
             language: {
-                "url": "{{asset('assets/Arabic.json')}}"
+                url: "{{ asset('assets/Arabic.json') }}"
             },
+
             createdRow: function (row, data, dataIndex) {
+
                 $(row).addClass('border-bottom');
+
                 $('td', row).each(function (index) {
+
                     if (index < 4) {
                         $(this).addClass('text-center');
                     }
+
                 });
             },
+
             drawCallback: function () {
+
                 if (typeof KTMenu !== 'undefined') {
                     KTMenu.createInstances();
                 }
+
                 if (typeof bootstrap !== 'undefined') {
-                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+
+                    var tooltipTriggerList =
+                        [].slice.call(
+                            document.querySelectorAll(
+                                '[data-bs-toggle="tooltip"]'
+                            )
+                        );
+
                     tooltipTriggerList.map(function (tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
+
+                        return new bootstrap.Tooltip(
+                            tooltipTriggerEl
+                        );
+
                     });
                 }
             },
+
             initComplete: function () {
-                console.log("DataTable initialized successfully");
+
+                console.log(
+                    "DataTable initialized successfully"
+                );
+
             }
         });
 
@@ -149,13 +195,23 @@
 
         // بحث سريع
         var searchTimeout;
-        $('[data-kt-student-table-filter="search"]').on('keyup', function () {
-            clearTimeout(searchTimeout);
-            var input = this;
-            searchTimeout = setTimeout(function () {
-                table.search(input.value).draw();
-            }, 300);
-        });
+
+        $('[data-kt-student-table-filter="search"]').on(
+            'keyup',
+            function () {
+
+                clearTimeout(searchTimeout);
+
+                var input = this;
+
+                searchTimeout = setTimeout(function () {
+
+                    table.search(input.value).draw();
+
+                }, 300);
+
+            }
+        );
 
         // ✅ زر البحث المتقدم - مع تطبيق جميع الفلاتر
         $('.search_btn').on('click', function() {
@@ -197,7 +253,6 @@
         // =============================================
         $(document).on('click', '.export-students-btn', function() {
             var exportType = $(this).data('export-type') || 'excel';
-
             // ✅ جمع الفلاتر الحالية
             var filters = {
                 student_id: $('#filter_student_id').val(),

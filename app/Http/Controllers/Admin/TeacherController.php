@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
@@ -74,7 +75,7 @@ class TeacherController extends Controller
 
                 if (auth()->user()->can('Student edit')) {
                     $actions .= '<div class="menu-item px-3">
-                                <a href="' . url("/students/edit-student/{$teacher->id}") . '" class="menu-link px-3">'
+                                <a href="' . url("admin/teachers/editTeachers/{$teacher->id}") . '" class="menu-link px-3">'
                         . trans('admin.Edit') . '</a>
                              </div>';
                 }
@@ -216,5 +217,379 @@ class TeacherController extends Controller
                 'message' => 'حدث خطأ أثناء تغيير حالة الحساب: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function addTeachers(Request $request)
+    {
+        return view('admin.Teachers.add');
+
+    }
+    public function storeTeachers(Request $request)
+    {
+        $validated = $request->validate([
+            'teacher_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:teachers,email',
+            'password' => 'required|string|min:6|confirmed',
+            'phone_number' => 'required|string|max:50|unique:teachers,phone_number',
+            'national_id' => 'nullable|string|max:50|unique:teachers,national_id',
+            'birth_date' => 'nullable|date',
+            'gender' => 'nullable|in:male,female',
+
+            'address' => 'nullable|string|max:255',
+            'province_id' => 'nullable|exists:lookups,id',
+            'city_id' => 'nullable|exists:lookups,id',
+            'district_id' => 'nullable|exists:lookups,id',
+
+            'age_group_id' => 'nullable|exists:lookups,id',
+            'specializations' => 'nullable|string',
+            'experience_years' => 'nullable|integer|min:0',
+            'qualifications' => 'nullable|string',
+            'certificates' => 'nullable|string',
+            'previous_experience' => 'nullable|string',
+
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'cv_file' => 'nullable|mimes:pdf,doc,docx|max:5120',
+            'certificates_file' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+            'id_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'certificate_good_conduct' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+
+            'status' => 'required|in:pending,active,inactive,suspended',
+            'availability' => 'nullable|in:full_time,part_time,freelance',
+            'notes' => 'nullable|string',
+        ]);
+
+        // تشفير كلمة المرور
+        $validated['password'] = Hash::make($validated['password']);
+
+        // مجلد رفع ملفات المعلمين
+        $uploadPath = public_path('uploads/teachers');
+
+        // إنشاء المجلد إذا لم يكن موجودًا
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | صورة المدرس
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('profile_image')) {
+
+            $profileName = time() . '_profile.' .
+                $request->file('profile_image')->getClientOriginalExtension();
+
+            $request->file('profile_image')->move($uploadPath.'/profiles/', $profileName);
+
+            $validated['profile_image'] = 'uploads/teachers/profiles/'.$profileName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | السيرة الذاتية
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('cv_file')) {
+
+            $cvName = time() . '_cv.' .
+                $request->file('cv_file')->getClientOriginalExtension();
+
+            $request->file('cv_file')->move($uploadPath, $cvName);
+
+            $validated['cv_file'] = $cvName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | ملف الشهادات
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('certificates_file')) {
+
+            $certificatesName = time() . '_certificates.' .
+                $request->file('certificates_file')->getClientOriginalExtension();
+
+            $request->file('certificates_file')->move($uploadPath, $certificatesName);
+
+            $validated['certificates_file'] = $certificatesName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | صورة الهوية
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('id_photo')) {
+
+            $idPhotoName = time() . '_id.' .
+                $request->file('id_photo')->getClientOriginalExtension();
+
+            $request->file('id_photo')->move($uploadPath, $idPhotoName);
+
+            $validated['id_photo'] = $idPhotoName;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | شهادة حسن السيرة والسلوك
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('certificate_good_conduct')) {
+
+            $goodConductName = time() . '_good_conduct.' .
+                $request->file('certificate_good_conduct')->getClientOriginalExtension();
+
+            $request->file('certificate_good_conduct')->move($uploadPath, $goodConductName);
+
+            $validated['certificate_good_conduct'] = $goodConductName;
+        }
+
+        // حفظ المدرس
+        Teacher::create($validated);
+
+        return redirect()
+            ->route('admin.teachers.list')
+            ->with('success', 'تم إضافة المدرس بنجاح');
+    }
+
+    public function edit($id)
+    {
+        $teacher = Teacher::findOrFail($id);
+
+        return view('admin.Teachers.edit', compact(
+            'teacher',
+        ));
+    }
+    public function update(Request $request, $id)
+    {
+        $teacher = Teacher::findOrFail($id);
+
+        $validated = $request->validate([
+            'teacher_name' => 'required|string|max:255',
+
+            'email' => 'required|email|max:255|unique:teachers,email,' . $teacher->id,
+
+            'phone_number' => 'required|string|max:50|unique:teachers,phone_number,' . $teacher->id,
+
+            'national_id' => 'nullable|string|max:50|unique:teachers,national_id,' . $teacher->id,
+
+            'birth_date' => 'nullable|date',
+
+            'gender' => 'nullable|in:male,female',
+
+            'address' => 'nullable|string|max:255',
+
+
+            'age_group_id' => 'nullable|exists:lookups,id',
+
+            'specializations' => 'nullable|string',
+            'experience_years' => 'nullable|integer|min:0',
+            'qualifications' => 'nullable|string',
+            'certificates' => 'nullable|string',
+            'previous_experience' => 'nullable|string',
+
+            'password' => 'nullable|string|min:6|confirmed',
+
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'cv_file' => 'nullable|mimes:pdf,doc,docx|max:5120',
+
+            'certificates_file' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+
+            'id_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'certificate_good_conduct' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+
+            'status' => 'required|in:pending,active,inactive,suspended',
+
+            'availability' => 'nullable|in:full_time,part_time,freelance',
+
+            'notes' => 'nullable|string',
+        ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | كلمة المرور
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('password')) {
+
+            $validated['password'] = Hash::make($request->password);
+
+        } else {
+
+            // عدم تغيير كلمة المرور الحالية
+            unset($validated['password']);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | مجلد رفع الملفات
+        |--------------------------------------------------------------------------
+        */
+
+        $uploadPath = public_path('uploads/teachers');
+
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | صورة المدرس
+        |--------------------------------------------------------------------------
+        */
+        if ($request->hasFile('profile_image')) {
+
+            // حذف الصورة القديمة
+            if ($teacher->profile_image) {
+
+                $oldFile = $uploadPath . '/' . $teacher->profile_image;
+
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('profile_image');
+
+            $fileName = time() . '_profile.' .
+                $file->getClientOriginalExtension();
+
+            $file->move($uploadPath.'/profiles/', $fileName);
+
+            $validated['profile_image'] = 'uploads/teachers/profiles/'.$fileName;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | السيرة الذاتية
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('cv_file')) {
+
+            if ($teacher->cv_file) {
+
+                $oldFile = $uploadPath . '/' . $teacher->cv_file;
+
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('cv_file');
+
+            $fileName = time() . '_cv.' .
+                $file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $validated['cv_file'] = $fileName;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ملف الشهادات
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('certificates_file')) {
+
+            if ($teacher->certificates_file) {
+
+                $oldFile = $uploadPath . '/' . $teacher->certificates_file;
+
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('certificates_file');
+
+            $fileName = time() . '_certificates.' .
+                $file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $validated['certificates_file'] = $fileName;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | صورة الهوية
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('id_photo')) {
+
+            if ($teacher->id_photo) {
+
+                $oldFile = $uploadPath . '/' . $teacher->id_photo;
+
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('id_photo');
+
+            $fileName = time() . '_id.' .
+                $file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $validated['id_photo'] = $fileName;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | شهادة حسن السيرة والسلوك
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->hasFile('certificate_good_conduct')) {
+
+            if ($teacher->certificate_good_conduct) {
+
+                $oldFile = $uploadPath . '/' . $teacher->certificate_good_conduct;
+
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
+            }
+
+            $file = $request->file('certificate_good_conduct');
+
+            $fileName = time() . '_good_conduct.' .
+                $file->getClientOriginalExtension();
+
+            $file->move($uploadPath, $fileName);
+
+            $validated['certificate_good_conduct'] = $fileName;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | تحديث بيانات المدرس
+        |--------------------------------------------------------------------------
+        */
+
+        $teacher->update($validated);
+
+
+        return redirect()
+            ->route('admin.teachers.list')
+            ->with('success', 'تم تعديل بيانات المدرس بنجاح');
     }
 }

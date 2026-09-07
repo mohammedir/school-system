@@ -91,7 +91,7 @@
                             <!--end::Filter-->
                             @can('Student create')
                                 <!--begin::Add land-->
-                                <a href="{{url('/students/add-student')}}" class="btn btn-info">
+                                <a href="{{route('admin.teachers.addTeachers')}}" class="btn btn-info">
                                     <i class="bi bi-plus-circle fs-2"></i>إضافة معلم
                                 </a>
                                 <!--end::Add land-->

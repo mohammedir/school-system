@@ -346,6 +346,10 @@ class SitesController extends Controller
         $settings->school_vision = $request->school_vision;
         $settings->school_mission = $request->school_mission;
         $settings->principal_name = $request->principal_name;
+        $settings->section_kindergarten = $request->section_kindergarten;
+        $settings->section_primary = $request->section_primary;
+        $settings->section_secondary = $request->section_secondary;
+        $settings->section_center = $request->section_center;
         $settings->contact_phone = $request->contact_phone;
         $settings->contact_address = $request->contact_address;
         $settings->principal_speech = $request->principal_speech;
@@ -366,7 +370,6 @@ class SitesController extends Controller
         */
 
         if ($request->hasFile('site_logo')) {
-
             // حذف الصورة القديمة
             if ($settings->site_logo) {
 
@@ -376,7 +379,6 @@ class SitesController extends Controller
                     unlink($oldLogo);
                 }
             }
-
             // إنشاء اسم جديد للصورة
             $logoName = time() . '_logo.' .
                 $request->file('site_logo')->getClientOriginalExtension();
@@ -387,7 +389,6 @@ class SitesController extends Controller
             // حفظ اسم الصورة فقط في قاعدة البيانات
             $data['site_logo'] = $logoName;
         }
-
         /*
         |--------------------------------------------------------------------------
         | رفع صورة المديرة

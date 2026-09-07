@@ -170,28 +170,28 @@
                                 <div class="row mb-6">
                                     <label class="col-lg-3 col-form-label fw-semibold fs-6">قسم الروضة والتمهيدي</label>
                                     <div class="col-lg-9">
-                                        <textarea name="section_kindergarten" class="form-control form-control-solid" rows="3">{{ $settings['section_kindergarten'] ?? '' }}</textarea>
+                                        <textarea name="section_kindergarten" class="form-control form-control-solid" rows="3">{{ $site_settings->section_kindergarten ?? '' }}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="row mb-6">
                                     <label class="col-lg-3 col-form-label fw-semibold fs-6">المرحلة الأساسية (الابتدائية)</label>
                                     <div class="col-lg-9">
-                                        <textarea name="section_primary" class="form-control form-control-solid" rows="3">{{ $settings['section_primary'] ?? '' }}</textarea>
+                                        <textarea name="section_primary" class="form-control form-control-solid" rows="3">{{ $site_settings->section_primary ?? '' }}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="row mb-6">
                                     <label class="col-lg-3 col-form-label fw-semibold fs-6">المرحلة الإعدادية والتانوية</label>
                                     <div class="col-lg-9">
-                                        <textarea name="section_secondary" class="form-control form-control-solid" rows="3">{{ $settings['section_secondary'] ?? '' }}</textarea>
+                                        <textarea name="section_secondary" class="form-control form-control-solid" rows="3">{{ $site_settings->section_secondary ?? '' }}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="row mb-6">
                                     <label class="col-lg-3 col-form-label fw-semibold fs-6">مركز الدورات والأنشطة التدريبية</label>
                                     <div class="col-lg-9">
-                                        <textarea name="section_center" class="form-control form-control-solid" rows="3">{{ $settings['section_center'] ?? '' }}</textarea>
+                                        <textarea name="section_center" class="form-control form-control-solid" rows="3">{{ $site_settings->section_center ?? '' }}</textarea>
                                     </div>
                                 </div>
                             </div>

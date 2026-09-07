@@ -7,6 +7,7 @@ use App\Models\Attachments;
 use App\Models\Complaint;
 use App\Models\Lookups;
 use App\Models\SiteSetting;
+use App\Models\Teacher;
 use Illuminate\Http\Request; // ✅ استخدم هذا
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,7 @@ class MainController extends Controller
     public function index()
     {
         $data['site_settings'] = SiteSetting::firstOrCreate(['id' => 1]);
+        $data['teachers'] = Teacher::query()->get();
 
         return view('site.index', $data);
     }

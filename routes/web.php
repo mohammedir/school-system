@@ -148,6 +148,10 @@ Route::group(
             Route::prefix('admin/teachers')->name('admin.teachers.')->group(function () {
                 Route::get('/list',[TeacherController::class,'list'])->name('list');
                 Route::get('/getTeachers',[TeacherController::class,'getTeachers'])->name('getTeachers');
+                Route::get('/addTeachers',[TeacherController::class,'addTeachers'])->name('addTeachers');
+                Route::post('/storeTeachers',[TeacherController::class,'storeTeachers'])->name('store');
+                Route::get('/editTeachers/{id}',[TeacherController::class,'edit'])->name('edit');
+                Route::put('/editUpdate/{id}',[TeacherController::class,'update'])->name('update');
                 Route::get('/view-teacher/{id}',[TeacherController::class,'viewTeacher'])->name('viewTeacher');
                 Route::post('/activate/{id}', [TeacherController::class, 'activateTeacher'])->name('activate');
                 Route::post('/change-status/{id}', [TeacherController::class, 'changeStatus'])->name('change-status');
@@ -162,21 +166,6 @@ Route::group(
         Route::post('/settings/add-item',[SettingController::class,'add_item'])->name('settings.add_item');
         Route::post('/settings/edit-item/{id}',[SettingController::class,'edit_item'])->name('settings.edit_item');
         Route::delete('/settings/delete-item/{id}',[SettingController::class,'delete_item'])->name('settings.delete_item');
-
-        Route::get('/admin/investors',[InvestorsController::class,'index'])->name('investors.list');
-        Route::post('/admin/investors/accredit/{id}', [InvestorsController::class, 'accredit'])->name('investors.accredit');
-        Route::post('/admin/investors/reject/{id}', [InvestorsController::class, 'reject'])->name('investors.reject');
-        Route::get('/admin/add-investor',[InvestorsController::class,'add'])->name('investors.add');
-        Route::post('/admin/store-investor',[InvestorsController::class,'store'])->name('investors.store');
-        Route::get('/admin/edit-investor/{id}',[InvestorsController::class,'edit'])->name('investors.edit');
-        Route::get('/admin/approval-investor/{id}',[InvestorsController::class,'approval'])->name('investors.approval');
-        Route::post('/admin/update-investor/{id}',[InvestorsController::class,'update'])->name('investors.update');
-        Route::get('/admin/view.blade.php-investor/{id}',[InvestorsController::class,'view.blade.php'])->name('investors.view.blade.php');
-        Route::get('/admin/view.blade.php-waiting-approval-list',[InvestorsController::class,'view_waiting_approval_list'])->name('investors.view_waiting_approval_list');
-
-
-        Route::get('/admin/getInvestors',[InvestorsController::class,'getInvestors'])->name('investors.getInvestors');
-        Route::get('/admin/getWaitingApprovalInvestors',[InvestorsController::class,'getWaitingApprovalInvestors'])->name('investors.getWaitingApprovalInvestors');
 
 
         Route::get('/notifications/unread', function () {

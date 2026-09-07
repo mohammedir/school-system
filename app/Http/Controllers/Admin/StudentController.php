@@ -329,23 +329,32 @@ class StudentController extends Controller
      */
     public function getStudents(Request $request)
     {
-        $students = Student::query()->orderBy('id', 'desc');
+        $students = Student::query();
 
-        // ✅ الفلاتر الأساسية
+        // =========================================
+        // الفلاتر الأساسية
+        // =========================================
+
         if ($request->filled('student_id')) {
             $students->where('student_id', $request->student_id);
         }
+
         if ($request->filled('first_name')) {
             $students->where('first_name', 'like', '%' . $request->first_name . '%');
         }
+
         if ($request->filled('last_name')) {
             $students->where('last_name', 'like', '%' . $request->last_name . '%');
         }
+
         if ($request->filled('mobile')) {
             $students->where('mobile', 'like', '%' . $request->mobile . '%');
         }
 
-        // ✅ الفلاتر الجديدة
+        // =========================================
+        // الفلاتر الجديدة
+        // =========================================
+
         if ($request->filled('gender')) {
             $students->where('gender', $request->gender);
         }
@@ -359,74 +368,161 @@ class StudentController extends Controller
         }
 
         if ($request->filled('accreditation_status')) {
-            $students->where('accreditation_status', $request->accreditation_status);
+            $students->where(
+                'accreditation_status',
+                $request->accreditation_status
+            );
         }
 
-        // الفلاتر الإضافية للموقع
-        if ($request->filled('province_cd')) {
-            $students->where('province_cd', $request->province_cd);
-        }
-        if ($request->filled('location_cities')) {
-            $students->where('location_cities', $request->location_cities);
-        }
-        if ($request->filled('location_areas')) {
-            $students->where('location_areas', $request->location_areas);
-        }
+        // =========================================
+        // تاريخ الميلاد
+        // =========================================
 
-        // فلترة تاريخ الميلاد
         if ($request->filled('birth_date_from')) {
-            $students->where('birth_date', '>=', $request->birth_date_from);
+            $students->where(
+                'birth_date',
+                '>=',
+                $request->birth_date_from
+            );
         }
+
         if ($request->filled('birth_date_to')) {
-            $students->where('birth_date', '<=', $request->birth_date_to);
+            $students->where(
+                'birth_date',
+                '<=',
+                $request->birth_date_to
+            );
         }
+
+        // =========================================
+        // DataTables
+        // =========================================
 
         return DataTables::of($students)
+
             ->addColumn('full_name', function ($student) {
-                return $student->first_name . ' ' . ($student->last_name ?? '');
+                return trim(
+                    $student->first_name . ' ' . ($student->last_name ?? '')
+                );
             })
-            ->addColumn('birth_date', function ($student) {
-                return $student->birth_date ? date('Y-m-d', strtotime($student->birth_date)) : '-';
+
+            ->editColumn('birth_date', function ($student) {
+                return $student->birth_date
+                    ? date('Y-m-d', strtotime($student->birth_date))
+                    : '-';
             })
-            ->addColumn('mobile', function ($student) {
+
+            ->editColumn('mobile', function ($student) {
                 return $student->mobile ?? '-';
             })
+
+            // =========================================
+            // البحث في الاسم الكامل
+            // =========================================
+            ->filterColumn('full_name', function ($query, $keyword) {
+
+                $query->where(function ($q) use ($keyword) {
+
+                    $q->where('first_name', 'like', "%{$keyword}%")
+                        ->orWhere('last_name', 'like', "%{$keyword}%")
+                        ->orWhereRaw(
+                            "CONCAT(first_name, ' ', last_name) LIKE ?",
+                            ["%{$keyword}%"]
+                        );
+
+                });
+
+            })
+
+            // =========================================
+            // Actions
+            // =========================================
             ->addColumn('actions', function ($student) {
+
                 $actions = '<div class="text-end">
-                    <a href="#" class="btn btn-light btn-active-light-info btn-flex btn-center btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                        ' . trans('admin.Actions') . '
-                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                    </a>
-                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">';
+
+                <a href="#"
+                   class="btn btn-light btn-active-light-info btn-flex btn-center btn-sm"
+                   data-kt-menu-trigger="click"
+                   data-kt-menu-placement="bottom-end">
+
+                    ' . trans('admin.Actions') . '
+
+                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                </a>
+
+                <div class="menu menu-sub menu-sub-dropdown
+                            menu-column menu-rounded
+                            menu-gray-600
+                            menu-state-bg-light-primary
+                            fw-semibold fs-7 w-125px py-4"
+                     data-kt-menu="true">';
 
                 if (auth()->user()->can('Student view.blade.php')) {
-                    $actions .= '<div class="menu-item px-3">
-                            <a href="' . url("/students/view.blade.php-student/{$student->id}") . '" class="menu-link px-3">'
-                        . trans('admin.View') . '</a>
-                         </div>';
+
+                    $actions .= '
+                    <div class="menu-item px-3">
+
+                        <a href="' .
+                        url("/students/view.blade.php-student/{$student->id}") .
+                        '"
+                        class="menu-link px-3">
+
+                            ' . trans('admin.View') . '
+
+                        </a>
+
+                    </div>';
                 }
 
                 if (auth()->user()->can('Student edit')) {
-                    $actions .= '<div class="menu-item px-3">
-                                <a href="' . url("/students/edit-student/{$student->id}") . '" class="menu-link px-3">'
-                        . trans('admin.Edit') . '</a>
-                             </div>';
+
+                    $actions .= '
+                    <div class="menu-item px-3">
+
+                        <a href="' .
+                        url("/students/edit-student/{$student->id}") .
+                        '"
+                        class="menu-link px-3">
+
+                            ' . trans('admin.Edit') . '
+
+                        </a>
+
+                    </div>';
                 }
 
                 if (auth()->user()->can('Student delete')) {
-                    $actions .= '<div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3 delete-student-btn" data-student-id="' . $student->id . '">'
-                        . trans('admin.Delete') . '</a>
-                             </div>';
+
+                    $actions .= '
+                    <div class="menu-item px-3">
+
+                        <a href="#"
+                           class="menu-link px-3 delete-student-btn"
+                           data-student-id="' . $student->id . '">
+
+                            ' . trans('admin.Delete') . '
+
+                        </a>
+
+                    </div>';
                 }
 
-                $actions .= '</div></div>';
+                $actions .= '
+                        </div>
+                    </div>';
+
                 return $actions;
             })
+
             ->rawColumns(['actions'])
+
+            ->orderColumn('student_id', function ($query, $order) {
+                $query->orderBy('student_id', $order);
+            })
+
             ->make(true);
     }
-
     /**
      * تصدير بيانات الطلاب مع تطبيق الفلاتر
      */
@@ -472,10 +568,12 @@ class StudentController extends Controller
 
             $exportType = $request->type ?? 'excel';
 
+            $filters = $request->input('filters', []);
+
             if ($exportType === 'pdf') {
                 return $this->exportPDF($studentsData);
             } else {
-                return $this->exportHTMLExcel($studentsData);
+                return $this->exportHTMLExcel($studentsData,$filters);
             }
 
         } catch (\Exception $e) {
@@ -488,10 +586,10 @@ class StudentController extends Controller
     /**
      * تصدير إلى Excel باستخدام HTML
      */
-    private function exportHTMLExcel($students)
+    private function exportHTMLExcel($students,$filters)
     {
         $filename = 'students_' . date('Y-m-d_H-i-s') . '.xls';
-
+        $class_name = getlookup($filters['class_id'])->name_ar;
         $html = '<html xmlns:o="urn:schemas-microsoft-com:office:office"
                   xmlns:x="urn:schemas-microsoft-com:office:excel"
                   xmlns="http://www.w3.org/TR/REC-html40">
@@ -543,7 +641,7 @@ class StudentController extends Controller
                     </style>
                 </head>
                 <body>
-                    <div class="header">قائمة الطلاب</div>
+                    <div class="header">    الصف: ' . $class_name . '</div>
                     <table>
                         <thead>
                             <tr>
